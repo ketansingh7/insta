@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── SHARED FORM STYLES ─── */
+    input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px 16px;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+    }
+
+    input::placeholder { color: #8e8e8e; }
+
+    input:focus {
+      border-color: #0095f6;
+      box-shadow: 0 0 0 1px #0095f6;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 46px;
+      background: #1877f2;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      letter-spacing: 0.2px;
+    }
+
+    .login-btn:disabled { opacity: 0.35; cursor: default; }
+    .login-btn:not(:disabled):hover { opacity: 0.88; }
+
+    .forgot-link { text-align: center; }
+    .forgot-link a {
+      color: #e0e0e0;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .forgot-link a:hover { text-decoration: underline; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: #333; }
+
+    .divider-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8e8e8e;
+      letter-spacing: 1px;
+    }
+
+    .facebook-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 46px;
+      background: transparent;
+      border: 1px solid #333;
+      border-radius: 999px;
+      color: #0095f6;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .facebook-btn:hover { background: rgba(0,149,246,0.08); }
+
+    .create-account-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 46px;
+      background: transparent;
+      border: 1.5px solid #0095f6;
+      border-radius: 999px;
+      color: #0095f6;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .create-account-btn:hover { background: rgba(0,149,246,0.08); }
+
+    /* ─── MOBILE LAYOUT (default) ─── */
+    .desktop-layout { display: none; }
+
+    .mobile-layout {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-login-box {
+      width: 100%;
+      max-width: 360px;
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .mobile-logo { margin-bottom: 32px; }
+
+    .wordmark {
+      font-family: 'Dancing Script', 'Billabong', cursive;
+      font-size: 48px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .mobile-form-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mobile-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mobile-forgot { margin-top: 18px; margin-bottom: 24px; }
+    .mobile-divider { margin-bottom: 20px; }
+    .mobile-fb { margin-bottom: 0; }
+    .mobile-create { margin-top: 12px; }
+
+    .mobile-meta {
+      margin-top: 40px;
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── DESKTOP LAYOUT ─── */
+    @media (min-width: 768px) {
+      .mobile-layout { display: none; }
+      .desktop-layout {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      /* main two-column area */
+      .desktop-main {
+        flex: 1;
+        display: flex;
+      }
+
+      /* LEFT PANEL */
+      .desktop-left {
+        flex: 1;
+        background: #0a0a0a;
+        display: flex;
+        flex-direction: column;
+        padding: 36px 48px 36px 56px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .desktop-ig-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 40px;
+      }
+
+      .desktop-ig-logo svg { width: 48px; height: 48px; }
+
+      .desktop-headline {
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.25;
+        max-width: 440px;
+        color: #fff;
+        margin-bottom: 48px;
+      }
+
+      .desktop-headline .highlight {
+        background: linear-gradient(90deg, #f97316, #ef4444);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* photo collage */
+      .collage {
+        position: relative;
+        width: 420px;
+        height: 300px;
+        flex-shrink: 0;
+      }
+
+      .collage-card {
+        position: absolute;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      }
+
+      .collage-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .card-1 { width: 160px; height: 210px; top: 0; left: 40px; transform: rotate(-4deg); }
+      .card-2 { width: 200px; height: 240px; top: 10px; left: 170px; z-index: 2; }
+      .card-3 { width: 155px; height: 200px; top: 20px; left: 340px; transform: rotate(3deg); }
+
+      .collage-reaction {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        z-index: 5;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      }
+
+      .reaction-heart { background: #e91e63; width: 44px; height: 44px; bottom: 60px; left: 22px; }
+      .reaction-star  {
+        background: linear-gradient(135deg, #4caf50, #2e7d32);
+        width: 36px; height: 36px;
+        top: 8px; right: 30px;
+        font-size: 16px;
+      }
+      .reaction-like  { background: #ff9800; width: 38px; height: 38px; bottom: 20px; right: 80px; font-size: 18px; }
+
+      .collage-sticker {
+        position: absolute;
+        background: #fff;
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 13px;
+        color: #111;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 6;
+      }
+
+      .sticker-cf { bottom: 0px; left: 60px; }
+      .sticker-cf::before { content: '★'; color: #4caf50; font-size: 14px; }
+
+      /* RIGHT PANEL */
+      .desktop-right {
+        width: 420px;
+        min-width: 360px;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 40px;
+      }
+
+      .desktop-login-box {
+        width: 100%;
+        max-width: 340px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .desktop-form-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 20px;
+      }
+
+      .desktop-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .desktop-forgot { margin-top: 14px; margin-bottom: 20px; }
+      .desktop-divider { margin-bottom: 18px; }
+      .desktop-create { margin-top: 10px; }
+
+      .desktop-meta-row {
+        margin-top: 28px;
+        font-size: 12px;
+        color: #555;
+        text-align: center;
+      }
+
+      /* FOOTER */
+      .desktop-footer {
+        background: #0a0a0a;
+        border-top: 1px solid #1a1a1a;
+        padding: 20px 32px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 14px;
+      }
+
+      .footer-links a {
+        color: #555;
+        font-size: 12px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .footer-links a:hover { color: #888; }
+
+      .footer-bottom {
+        font-size: 12px;
+        color: #555;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .footer-lang {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+      }
+
+      .footer-lang svg {
+        width: 12px;
+        height: 12px;
+        fill: #555;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ MOBILE LAYOUT ═══ -->
+  <div class="mobile-layout">
+    <div class="mobile-login-box">
+      <div class="mobile-logo">
+        <h1 class="wordmark">Instagram</h1>
+      </div>
+
+      <p class="mobile-form-title">Log into Instagram</p>
+
+      <form class="mobile-form" id="mobileForm" novalidate autocomplete="on">
+        <input type="text" id="m-username" name="username"
+          placeholder="Mobile number, username or email"
+          autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <input type="password" id="m-password" name="password"
+          placeholder="Password" autocomplete="current-password" />
+        <button type="submit" class="login-btn" id="mLoginBtn" disabled>Log in</button>
+      </form>
+
+      <div class="forgot-link mobile-forgot">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <div class="divider mobile-divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">OR</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <button class="facebook-btn mobile-fb" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#0095f6"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+        Log in with Facebook
+      </button>
+
+      <a href="#" class="create-account-btn mobile-create">Create new account</a>
+
+      <div class="mobile-meta">&#x221e; Meta</div>
+    </div>
+  </div>
+
+  <!-- ═══ DESKTOP LAYOUT ═══ -->
+  <div class="desktop-layout">
+    <div class="desktop-main">
+
+      <!-- LEFT PANEL -->
+      <div class="desktop-left">
+        <!-- Instagram gradient icon -->
+        <div class="desktop-ig-logo">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f9ce34"/>
+                <stop offset="30%" stop-color="#ee2a7b"/>
+                <stop offset="65%" stop-color="#6228d7"/>
+                <stop offset="100%" stop-color="#4f5bd5"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#igGrad)"/>
+            <circle cx="24" cy="24" r="10" stroke="#fff" stroke-width="3" fill="none"/>
+            <circle cx="35" cy="13" r="2.5" fill="#fff"/>
+          </svg>
+        </div>
+
+        <h2 class="desktop-headline">
+          See everyday moments from<br/>your <span class="highlight">close friends.</span>
+        </h2>
+
+        <!-- Photo collage -->
+        <div class="collage">
+          <div class="collage-card card-1">
+            <img src="https://picsum.photos/seed/ig1/160/210" alt="" loading="lazy" />
+          </div>
+          <div class="collage-card card-2">
+            <img src="https://picsum.photos/seed/ig2/200/240" alt="" loading="lazy" />
+          </div>
+          <div class="collage-card card-3">
+            <img src="https://picsum.photos/seed/ig3/155/200" alt="" loading="lazy" />
+          </div>
+
+          <div class="collage-reaction reaction-heart">♥</div>
+          <div class="collage-reaction reaction-star">★</div>
+          <div class="collage-reaction reaction-like">👍</div>
+
+          <div class="collage-sticker sticker-cf">Close Friends</div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="desktop-right">
+        <div class="desktop-login-box">
+          <p class="desktop-form-title">Log into Instagram</p>
+
+          <form class="desktop-form" id="desktopForm" novalidate autocomplete="on">
+            <input type="text" id="d-username" name="username"
+              placeholder="Mobile number, username or email"
+              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <input type="password" id="d-password" name="password"
+              placeholder="Password" autocomplete="current-password" />
+            <button type="submit" class="login-btn" id="dLoginBtn" disabled style="margin-top:6px;">Log in</button>
+          </form>
+
+          <div class="forgot-link desktop-forgot">
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <div class="divider desktop-divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">OR</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <button class="facebook-btn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#0095f6"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+            Log in with Facebook
+          </button>
+
+          <a href="#" class="create-account-btn desktop-create">Create new account</a>
+
+          <div class="desktop-meta-row">&#x221e; Meta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="desktop-footer">
+      <div class="footer-links">
+        <a href="#">Meta</a>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Jobs</a>
+        <a href="#">Help</a>
+        <a href="#">API</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Locations</a>
+        <a href="#">Instagram Lite</a>
+        <a href="#">Meta AI</a>
+        <a href="#">Threads</a>
+        <a href="#">Contact Uploading &amp; Non-Users</a>
+        <a href="#">Meta Verified</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-lang">
+          English
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        </span>
+        <span>&copy; 2026 Instagram from Meta</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function setupForm(usernameId, passwordId, btnId, formId) {
+      const u = document.getElementById(usernameId);
+      const p = document.getElementById(passwordId);
+      const btn = document.getElementById(btnId);
+      const form = document.getElementById(formId);
+
+      function check() {
+        btn.disabled = !(u.value.trim().length > 0 && p.value.length > 0);
+      }
+
+      u.addEventListener('input', check);
+      p.addEventListener('input', check);
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!btn.disabled) {
+          const orig = btn.textContent;
+          btn.textContent = 'Logging in...';
+          btn.disabled = true;
+          setTimeout(() => { btn.textContent = orig; check(); }, 2000);
+        }
+      });
+    }
+
+    setupForm('m-username', 'm-password', 'mLoginBtn', 'mobileForm');
+    setupForm('d-username', 'd-password', 'dLoginBtn', 'desktopForm');
+  </script>
+</body>
+</html>
